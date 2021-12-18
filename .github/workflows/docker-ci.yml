@@ -25,7 +25,7 @@ jobs:
         tags: ${{ github.event.inputs.version }}
         buildArgs: VERSION=${{ github.event.inputs.version }}
         username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - name: Docker Build & Push Latest
       uses: mr-smithers-excellent/docker-build-push@v5.6
       if:  ${{ github.event.inputs.latest == 'true' }}
@@ -35,4 +35,4 @@ jobs:
         tags: latest
         buildArgs: VERSION=${{ github.event.inputs.version }}
         username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
