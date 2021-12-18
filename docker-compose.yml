@@ -1,0 +1,11 @@
+services:
+  warp:
+    image: amirdaaee/cloudflare-warp:latest
+    container_name: warp
+    ports:
+      - 127.0.0.1:4000:4000
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      net.ipv4.conf.eth0.route_localnet: 1
+    restart: unless-stopped
