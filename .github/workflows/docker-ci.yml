@@ -1,0 +1,38 @@
+name: Docker Image CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The warp version you want to build"
+        required: true
+      latest:
+        description: "tag as latest"
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker Build & Push Version
+      uses: mr-smithers-excellent/docker-build-push@v5.6
+      with:
+        registry: docker.io
+        image: amirdaaee/cloudflare-warp
+        tags: ${{ github.event.inputs.version }}
+        buildArgs: VERSION=${{ github.event.inputs.version }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Docker Build & Push Latest
+      uses: mr-smithers-excellent/docker-build-push@v5.6
+      if:  ${{ github.event.inputs.latest == 'true' }}
+      with:
+        registry: docker.io
+        image: amirdaaee/cloudflare-warp
+        tags: latest
+        buildArgs: VERSION=${{ github.event.inputs.version }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
