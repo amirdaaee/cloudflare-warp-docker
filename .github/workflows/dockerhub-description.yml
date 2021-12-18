@@ -16,5 +16,5 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        repository: amirdaaee/warp-proxy
+        repository: amirdaaee/cloudflare-warp
         short-description: ${{ github.event.repository.description }}
