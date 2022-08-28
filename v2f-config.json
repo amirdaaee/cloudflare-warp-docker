@@ -1,0 +1,42 @@
+{
+    "log": {
+        "loglevel": "warning"
+    },
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": []
+    },
+    "inbounds": [
+        {
+            "listen": "0.0.0.0",
+            "port": "1080",
+            "protocol": "socks",
+            "settings": {
+                "udp": true
+            },
+            "tag": "i_socks"
+        },
+        {
+            "listen": "0.0.0.0",
+            "port": "8080",
+            "protocol": "http",
+            "tag": "i_http"
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "socks",
+            "settings": {
+                "servers": [
+                    {
+                        "address": "127.0.0.1",
+                        "port": 40000,
+                        "users": [
+                        ]
+                    }
+                ]
+            },
+            "tag": "o_socks"
+        }
+    ]
+}

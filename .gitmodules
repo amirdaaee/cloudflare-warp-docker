@@ -1,0 +1,3 @@
+[submodule "v2fly-docker"]
+	path = v2fly-docker
+	url = https://github.com/v2fly/docker.git
