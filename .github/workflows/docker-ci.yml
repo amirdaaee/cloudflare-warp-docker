@@ -9,7 +9,7 @@ on:
       latest:
         description: "tag as latest"
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 jobs:
@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: Docker Build & Push Version
       uses: mr-smithers-excellent/docker-build-push@v5.6
       with:
