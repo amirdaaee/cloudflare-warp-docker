@@ -24,18 +24,22 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: ${{ secrets.DOCKERHUB_REPO }}
-        tags: |
-          type=raw,value=${{ github.event.inputs.version }}
-          type=raw,value=latest,enable=${{ github.event.inputs.latest }}
-        sep-tags: ','
         sep-labels: ','
+    - name: Docker tag
+      id: tag
+      run: |
+        VERSION=${{ github.event.inputs.version }}
+        if [[ ${{ github.event.inputs.latest }} == true ]]; then VERSION="$VERSION,latest" ; fi
+        echo "::set-output name=tag::$VERSION"
+        LABELS=$(echo ${{ steps.meta.outputs.labels }} | sed -e 's/\s/-/g')
+        echo "::set-output name=labels::$LABELS"
     - name: Docker Build & Push Version
       uses: mr-smithers-excellent/docker-build-push@v5.6
       with:
         registry: docker.io
         image: ${{ secrets.DOCKERHUB_REPO }}
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: ${{ steps.tag.outputs.tag }}
+        labels: ${{ steps.tag.outputs.lables }}
         buildArgs: VERSION=${{ github.event.inputs.version }}
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
