@@ -39,4 +39,4 @@ COPY v2f-config.json /etc/v2ray/
 RUN chmod +x /run.sh && \
 	mkdir -p /var/log/warp
 CMD [ "/run.sh" ] 
-HEALTHCHECK --interval=30s --timeout=1s --start-period=5s --retries=2 CMD curl -I -f -x socks5://127.0.0.1:1080 https://google.com && curl -I -f -x http://127.0.0.1:8080 https://google.com || exit 1
+HEALTHCHECK --interval=10s --timeout=1s --start-period=5s --retries=2 CMD curl -I -f -x socks5://127.0.0.1:1080 http://google.com && curl -I -f -x http://127.0.0.1:8080 http://google.com || exit 1
