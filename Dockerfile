@@ -15,7 +15,7 @@ WORKDIR /
 COPY pubkey.gpg /
 RUN set -x && \
 	apt update && \
-	apt install -y gnupg ca-certificates libcap2-bin && \
+	apt install -y gnupg ca-certificates libcap2-bin curl && \
 	apt-key add /pubkey.gpg && \
 	echo "deb http://pkg.cloudflareclient.com/ buster main" > /etc/apt/sources.list.d/cloudflare-client.list && \
 	apt update && \
@@ -30,12 +30,13 @@ ENV DEBIAN_FRONTEND noninteractive
 ARG VERSION
 LABEL \ 
 	org.opencontainers.image.authors="Amir Daaee <amir.daaee@gmail.com>" \
-	version=$VERSION
+	org.opencontainers.image.warp-version=$VERSION
+
 COPY  run.sh /
 COPY --from=v2fly /usr/bin/v2ray /usr/bin/v2ctl /usr/bin/
 COPY --from=v2fly /usr/local/share/v2ray/geosite.dat /usr/local/share/v2ray/geoip.dat /usr/local/share/v2ray/
 COPY v2f-config.json /etc/v2ray/
 RUN chmod +x /run.sh && \
 	mkdir -p /var/log/warp
-
 CMD [ "/run.sh" ] 
+HEALTHCHECK --interval=30s --timeout=1s --start-period=5s --retries=2 CMD curl -I -f -x socks5://127.0.0.1:1080 https://google.com && curl -I -f -x http://127.0.0.1:8080 https://google.com || exit 1

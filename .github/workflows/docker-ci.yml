@@ -19,22 +19,23 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ secrets.DOCKERHUB_REPO }}
+        tags: |
+          type=raw,value=${{ github.event.inputs.version }}
+          type=raw,value=latest,enable=${{ github.event.inputs.latest }}
+        sep-tags: ','
+        sep-labels: ','
     - name: Docker Build & Push Version
       uses: mr-smithers-excellent/docker-build-push@v5.6
       with:
         registry: docker.io
-        image: amirdaaee/cloudflare-warp
-        tags: ${{ github.event.inputs.version }}
-        buildArgs: VERSION=${{ github.event.inputs.version }}
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - name: Docker Build & Push Latest
-      uses: mr-smithers-excellent/docker-build-push@v5.6
-      if:  ${{ github.event.inputs.latest == 'true' }}
-      with:
-        registry: docker.io
-        image: amirdaaee/cloudflare-warp
-        tags: latest
+        image: ${{ secrets.DOCKERHUB_REPO }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
         buildArgs: VERSION=${{ github.event.inputs.version }}
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
