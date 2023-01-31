@@ -1,42 +1,69 @@
 {
-    "log": {
-        "loglevel": "warning"
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "listen": "0.0.0.0",
+      "port": "1080",
+      "protocol": "socks",
+      "settings": {
+        "udp": true
+      },
+      "tag": "i_socks"
     },
-    "routing": {
-        "domainStrategy": "AsIs",
-        "rules": []
+    {
+      "listen": "0.0.0.0",
+      "port": "8080",
+      "protocol": "http",
+      "tag": "i_http"
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "socks",
+      "settings": {
+        "servers": [
+          {
+            "address": "127.0.0.1",
+            "port": 40000,
+            "users": []
+          }
+        ]
+      },
+      "tag": "o_warp_socks"
     },
-    "inbounds": [
-        {
-            "listen": "0.0.0.0",
-            "port": "1080",
-            "protocol": "socks",
-            "settings": {
-                "udp": true
-            },
-            "tag": "i_socks"
-        },
-        {
-            "listen": "0.0.0.0",
-            "port": "8080",
-            "protocol": "http",
-            "tag": "i_http"
-        }
-    ],
-    "outbounds": [
-        {
-            "protocol": "socks",
-            "settings": {
-                "servers": [
-                    {
-                        "address": "127.0.0.1",
-                        "port": 40000,
-                        "users": [
-                        ]
-                    }
-                ]
-            },
-            "tag": "o_socks"
-        }
+    {
+      "protocol": "http",
+      "settings": {
+        "servers": [
+          {
+            "address": "127.0.0.1",
+            "port": 40000,
+            "users": []
+          }
+        ]
+      },
+      "tag": "o_warp_http"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "inboundTag": [
+          "i_http"
+        ],
+        "outboundTag": "o_warp_http",
+        "type": "field"
+      },
+      {
+        "inboundTag": [
+          "i_socks"
+        ],
+        "outboundTag": "o_warp_socks",
+        "type": "field"
+      }
     ]
+  }
 }
