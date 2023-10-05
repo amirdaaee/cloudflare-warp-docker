@@ -8,6 +8,9 @@ warp-svc > /var/log/warp/log &
 done
 warp-cli --accept-tos set-mode proxy
 warp-cli --accept-tos set-proxy-port 40000
+if [ -n "$LICENSE_KEY" ]; then
+	warp-cli -accept-tos set-license $LICENSE_KEY
+fi
 warp-cli --accept-tos connect
 ) && \
 /usr/bin/v2ray -config /etc/v2ray/v2f-config.json
