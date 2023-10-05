@@ -20,7 +20,6 @@ RUN set -x && \
 	echo "deb http://pkg.cloudflareclient.com/ buster main" > /etc/apt/sources.list.d/cloudflare-client.list && \
 	apt update && \
 	apt install cloudflare-warp=$VERSION -y && \
-	apt purge ca-certificates -y && \
 	apt autoremove -y && \
 	apt clean -y &&\
 	rm -rf /var/lib/apt/lists/*
